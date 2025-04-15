@@ -7,9 +7,9 @@ const validateSignup = (req, res, next) => {
     }
   
     // Only lowercase alphabets allowed in username
-    const usernameRegex = /^[a-z]+$/;
+    const usernameRegex = /^[a-z0-9_.]{3,10}$/;
     if (!usernameRegex.test(username)) {
-      return res.status(400).json({ error: 'Username must contain only lowercase letters (a-z)' });
+      return res.status(400).json({ error: 'Username must be 3-10 chars, a-z, 0-9, _ or .' });
     }
   
     // Check if password is provided
@@ -18,10 +18,11 @@ const validateSignup = (req, res, next) => {
     }
   
     // Check password rules
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{6,}$/;
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
     if (!passwordRegex.test(password)) {
       return res.status(400).json({
-        error: 'Password must be at least 6 characters long and include at least 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character.'
+        error: "Password must be at least 8 characters, with at least one uppercase, one lowercase, one number, and one special character."
+
       });
     }
   
