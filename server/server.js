@@ -3,6 +3,8 @@ const connectDB = require("./config/db"); // Import the DB connection
 const dotenv = require("dotenv"); // Import dotenv to load the .env variables
 const signupRoutes = require('./routes/signup');
 const loginRoutes = require('./routes/login');
+const notesRoutes = require('./routes/notes');
+
 // Load environment variables
 dotenv.config();
 console.log("Starting server");
@@ -23,6 +25,8 @@ app.get("/", (req, res) => {
 
 app.use('/signup', signupRoutes);
 app.use('/login', loginRoutes);
+app.use('/notes', notesRoutes);
+
 // Set the server port
 const PORT = process.env.PORT || 5000; // Default to 5000 if PORT isn't set
 app.listen(PORT, () => {
