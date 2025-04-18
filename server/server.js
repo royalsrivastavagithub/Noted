@@ -18,10 +18,25 @@ connectDB();
 // Middleware to parse incoming JSON requests
 app.use(express.json());
 
-// Example route (we'll add actual routes later)
-app.get("/", (req, res) => {
-  res.send("Status 200 :) Server is running!");
+const formatUptime = () => {
+  const totalSeconds = Math.floor(process.uptime());
+  const days = Math.floor(totalSeconds / 86400);
+  const hrs = Math.floor((totalSeconds % 86400) / 3600);
+  const mins = Math.floor((totalSeconds % 3600) / 60);
+  const secs = totalSeconds % 60;
+
+  return `${days}d ${hrs}h ${mins}m ${secs}s`;
+};
+
+app.get('/', (req, res) => {
+  res.status(200).json({
+    message: 'Welcome to the Noted API 👋',
+    status: 'OK',
+    version: '1.0',
+    uptime: formatUptime(),
+  });
 });
+
 
 app.use('/signup', signupRoutes);
 app.use('/login', loginRoutes);
