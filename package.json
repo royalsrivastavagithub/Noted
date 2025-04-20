@@ -1,0 +1,25 @@
+{
+  "name": "noted",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "servers": "concurrently \"npm run dev --prefix client\" \"npm run dev --prefix server\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/royalsrivastavagithub/Noted.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/royalsrivastavagithub/Noted/issues"
+  },
+  "homepage": "https://github.com/royalsrivastavagithub/Noted#readme",
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}

@@ -4,7 +4,7 @@ const dotenv = require("dotenv"); // Import dotenv to load the .env variables
 const signupRoutes = require('./routes/signup');
 const loginRoutes = require('./routes/login');
 const notesRoutes = require('./routes/notes');
-
+const cors = require('cors');
 // Load environment variables
 dotenv.config();
 console.log("Starting server");
@@ -14,7 +14,8 @@ const app = express();
 // Connect to the database
 console.log("Connecting to MongoDB");
 connectDB();
-
+// Enable CORS for all origins 
+app.use(cors());
 // Middleware to parse incoming JSON requests
 app.use(express.json());
 
