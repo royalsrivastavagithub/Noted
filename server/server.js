@@ -14,8 +14,13 @@ const app = express();
 // Connect to the database
 console.log("Connecting to MongoDB");
 connectDB();
-// Enable CORS for all origins 
-app.use(cors());
+// Enable CORS for all origins
+const corsOptions = {
+  origin: process.env.FRONTEND_URL, // Use the value from the .env file
+  methods: ["GET", "POST", "PUT", "DELETE"], // Allowed methods
+  credentials: true, // Allow credentials (cookies, headers)
+};
+app.use(cors(corsOptions)); 
 // Middleware to parse incoming JSON requests
 app.use(express.json());
 

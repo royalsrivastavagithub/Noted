@@ -49,6 +49,44 @@ const handleSignup = async (
   }
 };
 
+const handleLogin = async (
+  username: string,
+  password: string,
+  setMessage: React.Dispatch<React.SetStateAction<string | null>>,
+  setIsSuccess: React.Dispatch<React.SetStateAction<boolean>>, // used for both success/error
+  setIsLoggedIn: () => void
+) => {
+  console.log("Login Clicked!");
+
+  // Clear any previous success or error messages
+  setMessage(null);
+  setIsSuccess(false);
+
+  try {
+    const response = await axios.post(
+      `${import.meta.env.VITE_API_BASE_URL}/login`,
+      { username, password },
+      {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true, // for httpOnly cookies
+      }
+    );
+
+    setMessage("Login successful!");
+    setIsSuccess(true); // Mark as success
+    setIsLoggedIn(); // Mark as logged in (context will handle this)
+    console.log(response);
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      setMessage(error.response?.data.error || "Login failed");
+      setIsSuccess(false); // Mark as error
+    } else {
+      setMessage("Something went wrong");
+      setIsSuccess(false); // Mark as error
+    }
+  }
+};
+
 export function LoginForm({
   className,
   ...props
@@ -99,10 +137,25 @@ export function LoginForm({
                     />
                   </div>
                   <div className="grid grid-cols-2 gap-4">
-                    <Button className="w-full font-bold">Login</Button>
                     <Button
                       className="w-full font-bold"
-                      onClick={() => handleSignup(username, password, setMessage, setIsSuccess)}
+                      onClick={() =>
+                        handleLogin(
+                          username,
+                          password,
+                          setMessage, // unified for both errors and success
+                          setIsSuccess,
+                          () => {} // setIsLoggedIn() will come from context
+                        )
+                      }
+                    >
+                      Login
+                    </Button>
+                    <Button
+                      className="w-full font-bold"
+                      onClick={() =>
+                        handleSignup(username, password, setMessage, setIsSuccess)
+                      }
                     >
                       Create Account
                     </Button>
