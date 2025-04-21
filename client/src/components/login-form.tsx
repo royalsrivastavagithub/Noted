@@ -6,46 +6,55 @@ import { Label } from "@/components/ui/label";
 import img from "@/assets/Noted.png";
 import axios from "axios";
 import React, { useState } from "react";
-import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription } from "@/components/ui/alert-dialog"; // Import the AlertDialog components
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+} from "@/components/ui/alert-dialog";
+
+//  Redux imports
+import { useDispatch } from "react-redux";
+import { login as loginAction } from "@/redux/authSlice"; // adjust path if needed
 
 const handleSignup = async (
   username: string,
   password: string,
   setMessage: React.Dispatch<React.SetStateAction<string | null>>,
-  setIsSuccess: React.Dispatch<React.SetStateAction<boolean>>
+  setIsSuccess: React.Dispatch<React.SetStateAction<boolean>>,
+  setIsCreating: React.Dispatch<React.SetStateAction<boolean>> // Add setIsLoading here
 ) => {
-  console.log("Signup Clicked!");
-
-  // Clear any previous success or error messages
   setMessage(null);
   setIsSuccess(false);
-
+  setIsCreating(true); // Set loading state to true when the request starts
+  console.log("disableing signup button")
   try {
     const response = await axios.post(
       `${import.meta.env.VITE_API_BASE_URL}/signup`,
+      { username, password },
       {
-        username: username,
-        password: password,
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
       }
     );
     console.log("Signup success:", response.data);
-    setMessage("Account successfully created!"); // Set success message
-    setIsSuccess(true); // Mark as success
+    setMessage("Account successfully created!");
+    setIsSuccess(true);
   } catch (error) {
     if (axios.isAxiosError(error)) {
       console.error("Error message:", error.response?.data || error.message);
-      setMessage(error.response?.data.error || error.message); // Set the error message
-      setIsSuccess(false); // Mark as error
+      setMessage(error.response?.data.error || error.message);
+      setIsSuccess(false);
     } else {
       console.error("Unexpected error:", error);
-      setMessage("Something went wrong"); // Set a generic error message
-      setIsSuccess(false); // Mark as error
+      setMessage("Something went wrong");
+      setIsSuccess(false);
     }
+  } finally {
+    setIsCreating(false); // Set loading state to false when the request completes (success or error)
+    console.log("enabling signup button")
   }
 };
 
@@ -53,37 +62,35 @@ const handleLogin = async (
   username: string,
   password: string,
   setMessage: React.Dispatch<React.SetStateAction<string | null>>,
-  setIsSuccess: React.Dispatch<React.SetStateAction<boolean>>, // used for both success/error
-  setIsLoggedIn: () => void
+  setIsSuccess: React.Dispatch<React.SetStateAction<boolean>>,
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>,
+  onLoginSuccess: () => void
 ) => {
   console.log("Login Clicked!");
-
-  // Clear any previous success or error messages
   setMessage(null);
   setIsSuccess(false);
-
+  setIsLoading(true);
   try {
     const response = await axios.post(
       `${import.meta.env.VITE_API_BASE_URL}/login`,
       { username, password },
       {
         headers: { "Content-Type": "application/json" },
-        withCredentials: true, // for httpOnly cookies
+        withCredentials: true,
       }
     );
-
-    setMessage("Login successful!");
-    setIsSuccess(true); // Mark as success
-    setIsLoggedIn(); // Mark as logged in (context will handle this)
+    onLoginSuccess(); // Dispatch Redux login
     console.log(response);
   } catch (error) {
     if (axios.isAxiosError(error)) {
       setMessage(error.response?.data.error || "Login failed");
-      setIsSuccess(false); // Mark as error
+      setIsSuccess(false);
     } else {
       setMessage("Something went wrong");
-      setIsSuccess(false); // Mark as error
+      setIsSuccess(false);
     }
+  } finally {
+    setIsLoading(false);
   }
 };
 
@@ -91,22 +98,26 @@ export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+  const dispatch = useDispatch(); // 👈 Redux dispatch
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [message, setMessage] = useState<string | null>(null); // Unified message state
-  const [isSuccess, setIsSuccess] = useState<boolean>(true); // Flag to differentiate between success or error
-
+  const [message, setMessage] = useState<string | null>(null);
+  const [isSuccess, setIsSuccess] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isCreating, setIsCreating] = useState(false);
   return (
     <div>
       <div className={cn("flex flex-col gap-6", className)} {...props}>
-        <Card className="overflow-hidden p-0 ">
+        <Card className="overflow-hidden p-0">
           <CardContent className="grid flex-row p-0 md:grid-cols-2">
             <div id="form">
               <div className="p-6 md:p-8">
                 <div className="flex flex-col gap-6">
                   <div className="flex flex-col items-center text-center">
                     <div className="bg-blue-500">
-                      <h1 className="text-2xl font-bold p-1 text-white">NOTED</h1>
+                      <h1 className="text-2xl font-bold p-1 text-white">
+                        NOTED
+                      </h1>
                     </div>
                     <p className="text-muted-foreground text-balance">
                       Create or Login in your NOTED account
@@ -139,25 +150,34 @@ export function LoginForm({
                   <div className="grid grid-cols-2 gap-4">
                     <Button
                       className="w-full font-bold"
+                      disabled={isLoading}
                       onClick={() =>
                         handleLogin(
                           username,
                           password,
-                          setMessage, // unified for both errors and success
+                          setMessage,
                           setIsSuccess,
-                          () => {} // setIsLoggedIn() will come from context
+                          setIsLoading,
+                          () => dispatch(loginAction()) // ✅ Redux login
                         )
                       }
                     >
-                      Login
+                      {isLoading ? "Logging in..." : "Login"}
                     </Button>
                     <Button
                       className="w-full font-bold"
+                      disabled={isCreating} 
                       onClick={() =>
-                        handleSignup(username, password, setMessage, setIsSuccess)
+                        handleSignup(
+                          username,
+                          password,
+                          setMessage,
+                          setIsSuccess,
+                          setIsCreating
+                        )
                       }
                     >
-                      Create Account
+                      {isCreating ? "Creating..." : "Create Account"}
                     </Button>
                   </div>
                 </div>
@@ -192,8 +212,12 @@ export function LoginForm({
                 </div>
               </div>
             </div>
-            <div id="image" className="relative hidden md:block ">
-              <img src={img} alt="Image" className="h-full w-full object-cover" />
+            <div id="image" className="relative hidden md:block">
+              <img
+                src={img}
+                alt="Image"
+                className="h-full w-full object-cover"
+              />
             </div>
           </CardContent>
         </Card>
@@ -204,11 +228,15 @@ export function LoginForm({
           <AlertDialog open={true}>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>{isSuccess ? "Success" : "Error"}</AlertDialogTitle>
+                <AlertDialogTitle>
+                  {isSuccess ? "Success" : "Error"}
+                </AlertDialogTitle>
                 <AlertDialogDescription>{message}</AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel onClick={() => setMessage(null)}>Close</AlertDialogCancel>
+                <AlertDialogCancel onClick={() => setMessage(null)}>
+                  Close
+                </AlertDialogCancel>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
