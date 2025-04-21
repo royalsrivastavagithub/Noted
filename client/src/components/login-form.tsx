@@ -16,9 +16,12 @@ import {
   AlertDialogDescription,
 } from "@/components/ui/alert-dialog";
 
-//  Redux imports
+// Redux imports
 import { useDispatch } from "react-redux";
 import { login as loginAction } from "@/redux/authSlice"; // adjust path if needed
+import { setUserInfo } from "@/redux/infoSlice";  // adjust the path as necessary
+import { AppDispatch } from "@/redux/store"; // adjust the path to your store file
+
 
 const handleSignup = async (
   username: string,
@@ -64,9 +67,9 @@ const handleLogin = async (
   setMessage: React.Dispatch<React.SetStateAction<string | null>>,
   setIsSuccess: React.Dispatch<React.SetStateAction<boolean>>,
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>,
+  dispatch: AppDispatch,  // Pass the dispatch function as a parameter
   onLoginSuccess: () => void
 ) => {
-  console.log("Login Clicked!");
   setMessage(null);
   setIsSuccess(false);
   setIsLoading(true);
@@ -79,8 +82,13 @@ const handleLogin = async (
         withCredentials: true,
       }
     );
-    onLoginSuccess(); // Dispatch Redux login
-    console.log(response);
+    // Dispatch user info to Redux store
+    dispatch(setUserInfo({ username: username, token: response.data.token }));
+    dispatch(loginAction());  // ✅ Redux login action
+    
+    onLoginSuccess(); // You can call any post-login action you need here
+    
+
   } catch (error) {
     if (axios.isAxiosError(error)) {
       setMessage(error.response?.data.error || "Login failed");
@@ -98,13 +106,14 @@ export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
-  const dispatch = useDispatch(); // 👈 Redux dispatch
+  const dispatch = useDispatch<AppDispatch>(); // 👈 Redux dispatch
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState<boolean>(true);
   const [isLoading, setIsLoading] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
+
   return (
     <div>
       <div className={cn("flex flex-col gap-6", className)} {...props}>
@@ -158,7 +167,8 @@ export function LoginForm({
                           setMessage,
                           setIsSuccess,
                           setIsLoading,
-                          () => dispatch(loginAction()) // ✅ Redux login
+                          dispatch, // Passing dispatch here
+                          () => dispatch(loginAction()) // ✅ Redux login action
                         )
                       }
                     >
