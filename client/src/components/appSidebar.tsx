@@ -13,14 +13,15 @@ import { logout } from '@/redux/authSlice'; // Adjust path as needed
 import { clearUserInfo } from '@/redux/infoSlice';
 import { useDispatch } from "react-redux";
 
-
 export function AppSidebar() {
+  const notes = useSelector((state: RootState) => state.notes.notes)
   const username = useSelector((state: RootState) => state.info.username);
   const dispatch = useDispatch();
   const handleLogout = () => {
     dispatch(logout());
     dispatch(clearUserInfo());
   };
+  //console.log(notes)
   return (
     <Sidebar>
       <SidebarHeader>
@@ -31,12 +32,12 @@ export function AppSidebar() {
           <ModeToggle></ModeToggle>
         </div>
 
-        <div className="bg-blue-400 dark:bg-blue-800 rounded-xs  p-2 flex items-center justify-between">
+        <div className="bg-blue-600 dark:bg-blue-800 rounded-xs  p-2 flex items-center justify-between">
           <div className="rounded-xs text-white dark:text-white font-bold   flex-1 flex items-center justify-center">
             {username}
           </div>
           <div className="rounded-xs text-white font-bold  pr-2 ">
-            <Button onClick={handleLogout}variant="destructive">
+            <Button className="bg-red-500 hover:bg-red-400" onClick={handleLogout}variant="default">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"
@@ -55,8 +56,20 @@ export function AppSidebar() {
               </svg>
             </Button>
           </div>
+          
         </div>
         <hr className="bg-gray-500" />
+        <div className="notes">
+  {notes.map((note,  _id) => (
+    <button
+      key={ _id}
+      className=" truncate w-full text-left p-3 mb-2 hover:bg-blue-600 dark:bg-gray-700 dark:hover:bg-blue-800 rounded-md"
+    >
+      {note.title}
+    </button>
+  ))}
+</div>
+
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup />

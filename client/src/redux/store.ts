@@ -1,11 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
 import authReducer from './authSlice'; // Assuming your authSlice is in the correct path
 import infoReducer from './infoSlice'; // Assuming your infoSlice is in the correct path
-
+import noteReducer from './notesSlice'
 export const store = configureStore({
   reducer: {
     auth: authReducer, // It's better to use 'auth' for consistency, but 'info' is also fine.
-    info: infoReducer,
+    info: infoReducer,notes: noteReducer,
   },
 });
 

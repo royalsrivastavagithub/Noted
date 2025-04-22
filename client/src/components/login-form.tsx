@@ -19,9 +19,9 @@ import {
 // Redux imports
 import { useDispatch } from "react-redux";
 import { login as loginAction } from "@/redux/authSlice"; // adjust path if needed
-import { setUserInfo } from "@/redux/infoSlice";  // adjust the path as necessary
+import { setUserInfo } from "@/redux/infoSlice"; // adjust the path as necessary
 import { AppDispatch } from "@/redux/store"; // adjust the path to your store file
-
+import { setNotes } from "@/redux/notesSlice";
 
 const handleSignup = async (
   username: string,
@@ -33,7 +33,7 @@ const handleSignup = async (
   setMessage(null);
   setIsSuccess(false);
   setIsCreating(true); // Set loading state to true when the request starts
-  console.log("disableing signup button")
+  console.log("disableing signup button");
   try {
     const response = await axios.post(
       `${import.meta.env.VITE_API_BASE_URL}/signup`,
@@ -57,7 +57,7 @@ const handleSignup = async (
     }
   } finally {
     setIsCreating(false); // Set loading state to false when the request completes (success or error)
-    console.log("enabling signup button")
+    console.log("enabling signup button");
   }
 };
 
@@ -67,7 +67,7 @@ const handleLogin = async (
   setMessage: React.Dispatch<React.SetStateAction<string | null>>,
   setIsSuccess: React.Dispatch<React.SetStateAction<boolean>>,
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>,
-  dispatch: AppDispatch,  // Pass the dispatch function as a parameter
+  dispatch: AppDispatch, // Pass the dispatch function as a parameter
   onLoginSuccess: () => void
 ) => {
   setMessage(null);
@@ -84,11 +84,21 @@ const handleLogin = async (
     );
     // Dispatch user info to Redux store
     dispatch(setUserInfo({ username: username, token: response.data.token }));
-    dispatch(loginAction());  // ✅ Redux login action
-    
-    onLoginSuccess(); // You can call any post-login action you need here
-    
+    //getnotes
+    const notesResponse = await axios.get(
+      `${import.meta.env.VITE_API_BASE_URL}/notes`,
+      {
+        headers: {
+          Authorization: `Bearer ${response.data.token}`,
+        },
+      }
+    );
 
+    dispatch(setNotes(notesResponse.data.notes));
+  
+
+    dispatch(loginAction()); // ✅ Redux login action
+    onLoginSuccess(); // You can call any post-login action you need here
   } catch (error) {
     if (axios.isAxiosError(error)) {
       setMessage(error.response?.data.error || "Login failed");
@@ -176,7 +186,7 @@ export function LoginForm({
                     </Button>
                     <Button
                       className="w-full font-bold"
-                      disabled={isCreating} 
+                      disabled={isCreating}
                       onClick={() =>
                         handleSignup(
                           username,
