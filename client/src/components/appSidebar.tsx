@@ -3,7 +3,7 @@ import {
   SidebarContent,
   SidebarFooter,
   SidebarGroup,
-  SidebarHeader,
+  SidebarHeader,SidebarTrigger
 } from "@/components/ui/sidebar";
 import { ModeToggle } from "./ModeToggle";
 import { Button } from "./ui/button";
@@ -23,7 +23,9 @@ export function AppSidebar() {
   };
   //console.log(notes)
   return (
-    <Sidebar>
+    <>
+    <Sidebar className="lg:flex lg:w-64 lg:h-screen fixed">
+      
       <SidebarHeader>
         <div className=" p-4 gap-4 flex items-center justify-between">
           <div className="rounded-xs text-white font-bold bg-blue-600 p-2  flex-1 flex items-center justify-center">
@@ -59,11 +61,11 @@ export function AppSidebar() {
           
         </div>
         <hr className="bg-gray-500" />
-        <div className="notes">
+        <div id="notes" className="overflow-y-scroll h-screen">
   {notes.map((note,  _id) => (
     <button
       key={ _id}
-      className=" truncate w-full text-left p-3 mb-2 hover:bg-blue-600 dark:bg-gray-700 dark:hover:bg-blue-800 rounded-md"
+      className=" truncate w-full text-left p-3 mb-2 hover:bg-blue-700 dark:bg-gray-700 dark:hover:bg-blue-800 rounded-md"
     >
       {note.title}
     </button>
@@ -76,6 +78,9 @@ export function AppSidebar() {
         <SidebarGroup />
       </SidebarContent>
       <SidebarFooter />
+      
     </Sidebar>
+    <SidebarTrigger className="w-[25px] h-[25px] bg-blue-600 hover:bg-blue-300"></SidebarTrigger>
+    </>
   );
 }
