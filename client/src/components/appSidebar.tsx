@@ -104,9 +104,11 @@ export function AppSidebar() {
   }
   return (
     <>
-      <div>
+      <div >
+        
         <Sidebar className="lg:flex lg:w-64 lg:h-screen fixed">
-          <SidebarHeader className="bg-blue-300 dark:bg-gray-900">
+          <SidebarHeader className="bg-blue-300 dark:bg-gray-900  space-y-1">
+            <div className="pr-2">
             <div className="p-4 gap-4 flex items-center justify-between">
               <div className="rounded-xs text-white font-bold bg-blue-600 p-2 flex-1 flex items-center justify-center">
                 NOTED
@@ -114,8 +116,8 @@ export function AppSidebar() {
               <ModeToggle />
             </div>
 
-            <div className="bg-blue-600 dark:bg-blue-800 rounded-xs p-2 flex items-center justify-between">
-              <div className="rounded-xs text-white dark:text-white font-bold flex-1 flex items-center justify-center">
+            <div className=" bg-blue-600 dark:bg-blue-800 rounded-xs p-2 flex items-center justify-between">
+              <div className=" rounded-xs text-white dark:text-white font-bold flex-1 flex items-center justify-center">
                 {username}
               </div>
               <div className="rounded-xs text-white font-bold pr-2">
@@ -144,16 +146,36 @@ export function AppSidebar() {
                 </Button>
               </div>
             </div>
-
+            </div>
             <hr className="bg-gray-500" />
-            <div>
+            <div className="pr-2 space-y-2">
               {viewState === "editing" ? (
-                <p className="text-sm text-gray-500 bold p-2 px-2">
-                  You are currently editing a note
-                </p>
+                <>
+                  <p className="text-sm text-gray-500 font-bold p-2 px-2">
+                    You are currently editing a note
+                  </p>
+                  <Button
+                    className=" flex-1 w-full p-5 rounded-xs bg-gray-400 cursor-not-allowed"
+                    disabled
+                  >
+                    Add Note
+                  </Button>
+                </>
+              ) : viewState === "adding" ? (
+                <>
+                  <p className="text-sm text-gray-500 font-bold p-2 px-2">
+                    You are currently adding a note
+                  </p>
+                  <Button
+                    className="flex-1 w-full p-5 rounded-xs bg-gray-400 cursor-not-allowed"
+                    disabled
+                  >
+                    Add Note
+                  </Button>
+                </>
               ) : (
                 <Button
-                  className="flex-1 w-full p-5 rounded-xs"
+                  className="text-white flex-1 w-full p-5 rounded-xs"
                   onClick={handleNoteAdd}
                 >
                   Add Note
@@ -162,65 +184,68 @@ export function AppSidebar() {
             </div>
 
             <hr className="bg-gray-500" />
-            <div
-              id="notes"
-              className="overflow-y-scroll h-screen pr-2 space-y-2"
-            >
-              {notes.map((note) => (
-                <div
-                  key={note._id}
-                  className={`flex rounded-md pr-4 mb-2 
-        ${
-          activeNoteId === note._id
-            ? "bg-blue-600 text-white" // Active note style
-            : "bg-blue-300 hover:bg-blue-700 dark:bg-gray-700 dark:hover:bg-blue-800"
-        }`}
-                >
-                  <button
-                    onClick={() => handleNoteClick(note)}
-                    className="flex truncate w-full text-left p-3"
+            {viewState !== "editing" && viewState !== "adding" && (
+              <div
+                id="notes"
+                className="overflow-y-scroll h-screen pr-2 space-y-2"
+              >
+                {notes.map((note) => (
+                  <div
+                    key={note._id}
+                    className={`flex rounded-md pr-4 mb-2 
+          ${
+            activeNoteId === note._id
+              ? "bg-blue-600 text-white" // Active note style
+              : "bg-blue-300 hover:bg-blue-700 dark:bg-gray-700 dark:hover:bg-blue-800"
+          }`}
                   >
-                    <div className="truncate">{note.title}</div>
-                    <div className="ml-auto hover:bg-blue-500 p-1 ">
-                      {/* Conditionally render DropdownMenu only when the note is active */}
-                      {activeNoteId === note._id && (
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="16"
-                              height="16"
-                              fill="currentColor"
-                              viewBox="0 0 16 16"
-                            >
-                              <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0" />
-                            </svg>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent>
-                            <DropdownMenuItem
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleEdit(note);
-                              }}
-                            >
-                              Edit
-                            </DropdownMenuItem>
-                            <DropdownMenuItem className="bg-red-600 hover:bg-red-400 dark:hover:bg-red-400"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleDelete(note);
-                              }}
-                            >
-                              Delete
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      )}
-                    </div>
-                  </button>
-                </div>
-              ))}
-            </div>
+                    <button
+                      onClick={() => handleNoteClick(note)}
+                      className="flex truncate w-full text-left p-3"
+                    >
+                      <div className="truncate">{note.title}</div>
+                      <div className="ml-auto hover:bg-blue-500 p-1 ">
+                        {/* Conditionally render DropdownMenu only when the note is active */}
+                        {activeNoteId === note._id && (
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="16"
+                                height="16"
+                                fill="currentColor"
+                                viewBox="0 0 16 16"
+                              >
+                                <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0" />
+                              </svg>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent>
+                              <DropdownMenuItem
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleEdit(note);
+                                }}
+                              >
+                                Edit
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                className="bg-red-600 hover:bg-red-400 dark:hover:bg-red-400"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleDelete(note);
+                                }}
+                              >
+                                Delete
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        )}
+                      </div>
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
           </SidebarHeader>
 
           <SidebarContent>

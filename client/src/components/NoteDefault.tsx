@@ -1,6 +1,6 @@
 export default function NoteDefault() {
     return (
-      <div className="flex justify-center items-center h-full bg-blue-100 dark:bg-blue-900 p-6 border-2 border-blue-300 dark:border-blue-600">
+      <div className="flex justify-center items-center h-full bg-blue-100 dark:bg-blue-950 p-6 border-2 border-blue-300 dark:border-blue-600">
         <div className="text-center">
           <h1 className="text-3xl font-semibold text-blue-700 dark:text-blue-300 mb-4">
             Welcome back! Ready to view or add your notes?
