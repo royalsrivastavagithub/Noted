@@ -84,7 +84,9 @@ export default function NoteEdit({ note, setViewState }: NoteEditProps) {
       }
     }
   };
-
+  function handleDefault() {
+    setViewState("default");
+  }
   return (
     <div className="note-edit-container flex flex-col h-full space-y-4 bg-white p-6 rounded-xl shadow-md dark:bg-black">
       {/* Title input */}
@@ -119,16 +121,24 @@ export default function NoteEdit({ note, setViewState }: NoteEditProps) {
           {content.length}/1000
         </p>
       </div>
-
-      {/* Save button */}
-      <button
-        onClick={handleSave}
-        disabled={!title || !content || isSaving}
-        className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 disabled:opacity-50 dark:bg-blue-800 dark:hover:bg-blue-700"
-      >
-        {isSaving ? "Saving..." : "Save Changes"}
-      </button>
-
+      <div className="flex gap-4">
+        {/* Save button */}
+        <button
+          
+          onClick={handleDefault}
+          disabled={isSaving}
+          className="w-full bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 disabled:opacity-50 dark:bg-red-800 dark:hover:bg-red-700"
+        >
+          {"Cancel"}
+        </button>
+        <button
+          onClick={handleSave}
+          disabled={!title || !content || isSaving}
+          className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 disabled:opacity-50 dark:bg-blue-800 dark:hover:bg-blue-700"
+        >
+          {isSaving ? "Saving..." : "Save Changes"}
+        </button>
+      </div>
       {/* Error message */}
       {error && (
         <p className="text-red-600 dark:text-red-400 text-sm mt-2">{error}</p>

@@ -86,6 +86,9 @@ export default function NoteAdd({ setViewState }: NoteAddProps) {
       }
     }
   };
+  function handleDefault() {
+    setViewState("default");
+  }
 
 return (
   <div className="note-add-container flex flex-col h-full space-y-4 bg-white p-6 rounded-xl shadow-md dark:bg-black">
@@ -121,8 +124,18 @@ return (
         {content.length}/1000
       </p>
     </div>
-
+<div className="flex gap-2">
     {/* Save button */}
+    <button
+          
+          onClick={handleDefault}
+          disabled={isSaving}
+          className="w-full bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 disabled:opacity-50 dark:bg-red-800 dark:hover:bg-red-700"
+        >
+          {"Cancel"}
+        </button>
+        
+
     <button
       onClick={handleSave}
       disabled={!title || !content || isSaving}
@@ -130,7 +143,7 @@ return (
     >
       {isSaving ? "Saving..." : "Save Note"}
     </button>
-
+    </div>
     {/* Display error message if any */}
     {error && (
       <p className="text-red-600 dark:text-red-400 text-sm mt-2">{error}</p>
