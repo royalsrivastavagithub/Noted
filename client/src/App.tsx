@@ -10,7 +10,7 @@ function App() {
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       
       
-      {isLoggedIn ? <Main /> : <div id="login"  className="absolute inset-0 flex items-center justify-center z-10"><Login></Login></div>}
+      {isLoggedIn ? <Main children /> : <div id="login"  className="absolute inset-0 flex items-center justify-center z-10"><Login></Login></div>}
 
     </ThemeProvider>
   )
