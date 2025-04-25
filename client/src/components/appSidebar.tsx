@@ -233,7 +233,8 @@ export function AppSidebar() {
           {
             default: <NoteDefault />,
             viewing: <NoteViewer note={selectedNote} />,
-            editing: <NoteEdit></NoteEdit>,
+            editing: <NoteEdit note={selectedNote !} setViewState={setViewState} />
+            ,
             adding: <NoteAdd setViewState={setViewState} />,
           }[viewState]
         }
