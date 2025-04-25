@@ -147,14 +147,20 @@ export function AppSidebar() {
 
             <hr className="bg-gray-500" />
             <div>
-              <Button
-                className="flex-1 w-full 
-             p-5 rounded-xs"
-                onClick={handleNoteAdd}
-              >
-                Add Note
-              </Button>
+              {viewState === "editing" ? (
+                <p className="text-sm text-gray-500 bold p-2 px-2">
+                  You are currently editing a note
+                </p>
+              ) : (
+                <Button
+                  className="flex-1 w-full p-5 rounded-xs"
+                  onClick={handleNoteAdd}
+                >
+                  Add Note
+                </Button>
+              )}
             </div>
+
             <hr className="bg-gray-500" />
             <div
               id="notes"
@@ -233,8 +239,9 @@ export function AppSidebar() {
           {
             default: <NoteDefault />,
             viewing: <NoteViewer note={selectedNote} />,
-            editing: <NoteEdit note={selectedNote !} setViewState={setViewState} />
-            ,
+            editing: (
+              <NoteEdit note={selectedNote!} setViewState={setViewState} />
+            ),
             adding: <NoteAdd setViewState={setViewState} />,
           }[viewState]
         }
