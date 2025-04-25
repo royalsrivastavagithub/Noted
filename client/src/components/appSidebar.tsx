@@ -35,8 +35,11 @@ export function AppSidebar() {
   const [viewState, setViewState] = useState<NoteViewState>("default");
   const [selectedNote, setSelectedNote] = useState<Note | null>(null);
   const token = useSelector((state: RootState) => state.info.token);
+  const [activeNoteId, setActiveNoteId] = useState<string | null>(null);
   const dispatch = useDispatch();
 
+
+  
   const handleLogout = () => {
     dispatch(logout());
     dispatch(clearUserInfo());
@@ -44,6 +47,7 @@ export function AppSidebar() {
 
   const handleNoteClick = (note: Note) => {
     setSelectedNote(note);
+    setActiveNoteId(note._id);  // 
     setViewState("viewing");
   };
   //edit
@@ -142,44 +146,54 @@ export function AppSidebar() {
              p-5 rounded-xs" onClick={handleNoteAdd} >Add Note</Button></div>
             <hr className="bg-gray-500" />
             <div
-              id="notes"
-              className="overflow-y-scroll h-screen pr-2 space-y-2"
-            >
-              {notes.map((note) => (
-                <div className="flex hover:bg-blue-700 dark:bg-gray-700 dark:hover:bg-blue-800 rounded-md pr-4 bg-blue-300">
-                  <button
-                    key={note._id}
-                    onClick={() => handleNoteClick(note)}
-                    className="flex truncate w-full text-left p-3 mb-2 "
-                  >
-                    <div className="truncate">{note.title}</div>
-                    <div className="ml-auto">
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="16"
-                            height="16"
-                            fill="currentColor"
-                            viewBox="0 0 16 16"
-                          >
-                            <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0" />
-                          </svg>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent>
-                          <DropdownMenuItem onClick={() => handleedit(note)}>
-                            Edit
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => handleDelete(note)}>
-                            Delete
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </div>
-                  </button>
-                </div>
-              ))}
-            </div>
+  id="notes"
+  className="overflow-y-scroll h-screen pr-2 space-y-2"
+>
+  {notes.map((note) => (
+    <div
+      key={note._id}
+      className={`flex rounded-md pr-4 mb-2 
+        ${activeNoteId === note._id
+          ? 'bg-blue-600 text-white'  // Active note style
+          : 'bg-blue-300 hover:bg-blue-700 dark:bg-gray-700 dark:hover:bg-blue-800'
+        }`}
+    >
+      <button
+        onClick={() => handleNoteClick(note)}
+        className="flex truncate w-full text-left p-3"
+      >
+        <div className="truncate">{note.title}</div>
+        <div className="ml-auto hover:bg-gray-800">
+          {/* Conditionally render DropdownMenu only when the note is active */}
+          {activeNoteId === note._id && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  viewBox="0 0 16 16"
+                >
+                  <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0" />
+                </svg>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuItem onClick={() => handleedit(note)}>
+                  Edit
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleDelete(note)}>
+                  Delete
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
+        </div>
+      </button>
+    </div>
+  ))}
+</div>
+
           </SidebarHeader>
 
           <SidebarContent>
