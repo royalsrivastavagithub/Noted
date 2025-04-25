@@ -91,7 +91,7 @@ export default function NoteAdd({ setViewState }: NoteAddProps) {
   }
 
 return (
-  <div className="note-add-container flex flex-col h-full space-y-4 bg-white p-6 rounded-xl shadow-md dark:bg-black">
+  <div className="note-add-container flex flex-col h-full space-y-4 bg-blue-100 p-6 rounded-xl shadow-md dark:bg-black">
     {/* Title input */}
     <div className="input-group">
       <div className="relative">

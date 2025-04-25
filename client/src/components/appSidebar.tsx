@@ -106,7 +106,7 @@ export function AppSidebar() {
     <>
       <div>
         <Sidebar className="lg:flex lg:w-64 lg:h-screen fixed">
-          <SidebarHeader>
+          <SidebarHeader className="bg-blue-300 dark:bg-gray-900">
             <div className="p-4 gap-4 flex items-center justify-between">
               <div className="rounded-xs text-white font-bold bg-blue-600 p-2 flex-1 flex items-center justify-center">
                 NOTED
@@ -181,7 +181,7 @@ export function AppSidebar() {
                     className="flex truncate w-full text-left p-3"
                   >
                     <div className="truncate">{note.title}</div>
-                    <div className="ml-auto hover:bg-gray-800">
+                    <div className="ml-auto hover:bg-blue-500 p-1 ">
                       {/* Conditionally render DropdownMenu only when the note is active */}
                       {activeNoteId === note._id && (
                         <DropdownMenu>
@@ -205,7 +205,7 @@ export function AppSidebar() {
                             >
                               Edit
                             </DropdownMenuItem>
-                            <DropdownMenuItem
+                            <DropdownMenuItem className="bg-red-600 hover:bg-red-400 dark:hover:bg-red-400"
                               onClick={(e) => {
                                 e.stopPropagation();
                                 handleDelete(note);
