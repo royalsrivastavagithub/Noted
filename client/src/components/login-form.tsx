@@ -33,16 +33,16 @@ const handleSignup = async (
   setMessage(null);
   setIsSuccess(false);
   setIsCreating(true); // Set loading state to true when the request starts
-  console.log("disableing signup button");
+ 
   try {
-    const response = await axios.post(
+   await axios.post(
       `${import.meta.env.VITE_API_BASE_URL}/signup`,
       { username, password },
       {
         headers: { "Content-Type": "application/json" },
       }
     );
-    console.log("Signup success:", response.data);
+    
     setMessage("Account successfully created!");
     setIsSuccess(true);
   } catch (error) {
@@ -57,7 +57,7 @@ const handleSignup = async (
     }
   } finally {
     setIsCreating(false); // Set loading state to false when the request completes (success or error)
-    console.log("enabling signup button");
+ 
   }
 };
 

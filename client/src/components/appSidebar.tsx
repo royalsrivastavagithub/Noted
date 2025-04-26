@@ -51,21 +51,16 @@ export function AppSidebar() {
   };
   //edit
   const handleEdit = (note: Note) => {
-    console.log("function handleedit");
-    console.log(note);
+   
     setSelectedNote(note); // So NoteEdit can receive it (if needed)
     setViewState("editing"); // <- This is what you forgot
-    setTimeout(() => {
-      console.log("Current viewState after editing:", viewState);
-    }, 100);
+    
   };
   //delete
   function handleDelete(note: Note) {
     const deleteNote = async () => {
       try {
-        console.log("Note to delete:", note);
-        console.log("Note ID:", note._id);
-
+       
         // Delete the note
         const res = await axios.delete(
           `${import.meta.env.VITE_API_BASE_URL}/notes/delete/${note._id}`,

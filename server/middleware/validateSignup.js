@@ -1,5 +1,5 @@
 const validateSignup = (req, res, next) => {
-    console.log("called signup");
+
     const { username, password } = req.body;
   
     // Check if username is provided

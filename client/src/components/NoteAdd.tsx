@@ -55,7 +55,7 @@ export default function NoteAdd({ setViewState }: NoteAddProps) {
             },
           }
         );
-        console.log(response.status);
+     
         // If the note was successfully added, update the view state to default
         if (response.status === 201) {
           setViewState("default");
@@ -69,7 +69,7 @@ export default function NoteAdd({ setViewState }: NoteAddProps) {
               },
             }
           );
-          console.log("code reached here");
+      
           // Dispatch the notes to the Redux store
           dispatch(setNotes(notesResponse.data.notes));
         }
