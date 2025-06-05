@@ -111,9 +111,3 @@ The backend should now be running on [http://localhost:3000](http://localhost:30
 
 Ensure that the frontend makes requests to the live backend API URL after deployment. Update the API endpoints in the frontend to match the Heroku backend URL.
 
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-
